@@ -1,4 +1,16 @@
 #!/bin/bash
+set -euo pipefail
+
+tmp=$(mktemp --directory)
+
+steamdir=$STEAM_HOME
+# this is relative to the action
+contentroot=$(pwd)/$rootPath
+
+# these are temporary file we create, so in a tmpdir
+mkdir -p "${tmp}/BuildOutput"
+manifest_path=${tmp}/manifest.vdf
+cd "$tmp"
 
 echo ""
 echo "#################################"
@@ -54,20 +66,6 @@ echo "#    Generating App Manifest    #"
 echo "#################################"
 echo ""
 
-mkdir -p BuildOutput
-
-steamdir=$STEAM_HOME
-manifest_path=$(pwd)/manifest.vdf
-contentroot=$(pwd)/$rootPath
-if [[ "$OSTYPE" = "darwin"* ]]; then
-  steamdir="$HOME/Library/Application Support/Steam"
-elif [[ "$OSTYPE" = "msys"* ]]; then
-  manifest_path=$(cygpath -w "$manifest_path")
-  contentroot=$(cygpath -w "$contentroot")
-elif [ "$RUNNER_OS" = "Linux" ]; then
-  steamdir="/home/runner/Steam"
-fi
-
 cat << EOF > "manifest.vdf"
 "appbuild"
 {
@@ -107,7 +105,6 @@ chmod 777 "$steamdir/$ssfnFileName"
 echo "Finished Copying SteamGuard Files!"
 echo ""
 
-
 echo ""
 echo "#################################"
 echo "#        Test login             #"
@@ -140,7 +137,7 @@ echo "#        Uploading build        #"
 echo "#################################"
 echo ""
 
-$STEAM_CMD +login "$steam_username" "$steam_password" +run_app_build $manifest_path +quit || (
+$STEAM_CMD +login "$steam_username" "$steam_password" +run_app_build "$manifest_path" +quit || (
     echo ""
     echo "#################################"
     echo "#             Errors            #"
@@ -150,7 +147,7 @@ $STEAM_CMD +login "$steam_username" "$steam_password" +run_app_build $manifest_p
     echo ""
     ls -alh
     echo ""
-    ls -alh $rootPath
+    ls -alh "$rootPath" || true
     echo ""
     echo "Listing logs folder:"
     echo ""
