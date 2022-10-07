@@ -116,32 +116,32 @@ else
 
   echo "Finished Copying SteamGuard Files!"
   echo ""
-fi
 
-echo ""
-echo "#################################"
-echo "#        Test login             #"
-echo "#################################"
-echo ""
+  echo ""
+  echo "#################################"
+  echo "#        Test login             #"
+  echo "#################################"
+  echo ""
 
-$STEAM_CMD +set_steam_guard_code "INVALID" +login "$steam_username" "$steam_password" "$steam_totp" +quit;
+  $STEAM_CMD +set_steam_guard_code "INVALID" +login "$steam_username" "$steam_password" +quit;
 
-ret=$?
-if [ $ret -eq 0 ]; then
-    echo ""
-    echo "#################################"
-    echo "#        Successful login       #"
-    echo "#################################"
-    echo ""
-else
+  ret=$?
+  if [ $ret -eq 0 ]; then
       echo ""
       echo "#################################"
-      echo "#        FAILED login           #"
+      echo "#        Successful login       #"
       echo "#################################"
       echo ""
-      echo "Exit code: $ret"
+  else
+        echo ""
+        echo "#################################"
+        echo "#        FAILED login           #"
+        echo "#################################"
+        echo ""
+        echo "Exit code: $ret"
 
-      exit $ret
+        exit $ret
+  fi
 fi
 
 echo ""
