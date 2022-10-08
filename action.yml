@@ -92,4 +92,3 @@ runs:
     depot8Path: ${{ inputs.depot8Path }}
     depot9Path: ${{ inputs.depot9Path }}
     releaseBranch: ${{ inputs.releaseBranch }}
-  post-entrypoint: 'echo \"::set-output name=manifest::$(pwd)/manifest.vdf\"'

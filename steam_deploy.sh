@@ -181,3 +181,5 @@ $STEAM_CMD +login "$steam_username" "$steam_password" "$steam_totp" +run_app_bui
     ls -Ralph BuildOutput
     exit 1
   )
+
+echo "::set-output name=manifest::$manifest_path"
